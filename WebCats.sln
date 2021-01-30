@@ -1,0 +1,28 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebCats.API", "WebCats.API\WebCats.API.csproj", "{69D0FF54-1963-47B9-A327-2775784DBD0D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebCats.Infrastructure", "WebCats.Infrastructure\WebCats.Infrastructure.csproj", "{7BAF3173-A6E1-4679-AD0E-206879627AE5}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebCats.Model", "WebCats.Model\WebCats.Model.csproj", "{859629DD-741E-4D1A-8807-5348D767C87F}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{69D0FF54-1963-47B9-A327-2775784DBD0D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{69D0FF54-1963-47B9-A327-2775784DBD0D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{69D0FF54-1963-47B9-A327-2775784DBD0D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{69D0FF54-1963-47B9-A327-2775784DBD0D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7BAF3173-A6E1-4679-AD0E-206879627AE5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7BAF3173-A6E1-4679-AD0E-206879627AE5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7BAF3173-A6E1-4679-AD0E-206879627AE5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7BAF3173-A6E1-4679-AD0E-206879627AE5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{859629DD-741E-4D1A-8807-5348D767C87F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{859629DD-741E-4D1A-8807-5348D767C87F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{859629DD-741E-4D1A-8807-5348D767C87F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{859629DD-741E-4D1A-8807-5348D767C87F}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
