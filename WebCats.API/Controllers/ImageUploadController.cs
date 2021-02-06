@@ -28,6 +28,10 @@ namespace WebCats.Controllers
         }*/
         
         [HttpPost]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         public async Task<ActionResult> Create([FromForm] CreateImageViewModel imageViewModel)
         {            
             if (imageViewModel.Files.Length > 0)

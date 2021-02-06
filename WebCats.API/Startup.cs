@@ -1,7 +1,10 @@
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
+using FluentValidation;
+using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -10,6 +13,8 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using WebCats.Infrastructure;
+using WebCats.Model;
 
 namespace WebCats
 {
@@ -25,7 +30,19 @@ namespace WebCats
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddControllers();
+            services
+                .AddControllers()
+                .AddFluentValidation(x => x.RegisterValidatorsFromAssemblyContaining<Startup>());
+
+            ValidatorOptions.Global.LanguageManager.Culture = new CultureInfo("pl");
+            
+            services.AddSingleton(provider => new DatabaseContext("mongodb://localhost:27017"));
+            services.AddSingleton<ImageRepository>();
+            services.AddSingleton<UserRepository>();
+            
+            services.AddSwaggerGen();
+            
+            EntityMappings.Map();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -36,6 +53,13 @@ namespace WebCats
                 app.UseDeveloperExceptionPage();
             }
 
+            app.UseSwagger();
+            
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "WebCats API");
+            });
+            
             app.UseHttpsRedirection();
 
             app.UseRouting();
