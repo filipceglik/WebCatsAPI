@@ -17,5 +17,9 @@
       <ProjectReference Include="..\WebCats.Model\WebCats.Model.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <_ContentIncludedByDefault Remove="Views\Index.cshtml" />
+    </ItemGroup>
+
 
 </Project>
