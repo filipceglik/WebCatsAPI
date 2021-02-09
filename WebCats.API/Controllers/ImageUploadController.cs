@@ -9,7 +9,6 @@ using Microsoft.AspNetCore.Mvc;
 using WebCats.Infrastructure;
 using WebCats.Model;
 using WebCats.ViewModels;
-using IHostingEnvironment = Microsoft.Extensions.Hosting.IHostingEnvironment;
 
 namespace WebCats.Controllers
 {
@@ -41,6 +40,7 @@ namespace WebCats.Controllers
         
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status302Found)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
@@ -67,16 +67,22 @@ namespace WebCats.Controllers
                     
                     if (validFile)
                     {
-                        using (FileStream filestream = System.IO.File.Create(_environment.WebRootPath + "uploads/" + imageViewModel.Files.FileName))
+                        if (!System.IO.File.Exists(_environment.WebRootPath + "uploads/" + imageViewModel.Files.FileName))
                         {
-                            await imageViewModel.Files.CopyToAsync(filestream);
-                            var image = new Image(Guid.NewGuid(), imageViewModel.Files.FileName, imageViewModel.ResponseCode, DateTime.Now, _environment.WebRootPath + "uploads/" + imageViewModel.Files.FileName);
-                            filestream.Flush();
-                            await _imageRepository.Create(image);
-                            return Ok();
-                        }  
-                    }
+                            using (FileStream filestream = System.IO.File.Create(_environment.WebRootPath + "uploads/" + imageViewModel.Files.FileName))
+                            {
+                                await imageViewModel.Files.CopyToAsync(filestream);
+                                var image = new Image(Guid.NewGuid(), imageViewModel.Files.FileName, imageViewModel.ResponseCode, DateTime.Now, _environment.WebRootPath + "uploads/" + imageViewModel.Files.FileName);
+                                filestream.Flush();
+                                await _imageRepository.CreateImage(image);
+                                return Ok();
+                            }
+                        }
 
+                        return Redirect("https://localhost:5001/api/response/302");
+
+                    }
+                    
                     return BadRequest();
 
                 }
@@ -86,10 +92,8 @@ namespace WebCats.Controllers
                     return BadRequest();
                 }
             }
-            else
-            {
-                return BadRequest();
-            }
+
+            return BadRequest();
         } 
     }
 }

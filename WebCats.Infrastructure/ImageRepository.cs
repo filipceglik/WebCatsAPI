@@ -17,12 +17,12 @@ namespace WebCats.Infrastructure
         }
         
         
-        public async Task<Image> GetImage(string statusCode) => await _databaseContext
+        public async Task<Image> GetImage(int responseCode) => await _databaseContext
             .GetCollection<Image>()
             .AsQueryable()
-            .FirstOrDefaultAsync(x => x.Filename == (statusCode+".png"));
+            .FirstOrDefaultAsync(x => x.Filename == (responseCode+".jpeg"));
 
-        public async Task Create(Image image /*string statusCode*/)
+        public async Task CreateImage(Image image)
         {
             await _databaseContext
                 .GetCollection<Image>()
