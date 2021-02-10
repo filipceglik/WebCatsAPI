@@ -21,7 +21,7 @@ namespace WebCats.Controllers
             _userRepository = userRepository;
         }
 
-        [HttpPost]
+        [HttpPost("api/user/new")]
         public async Task<ActionResult> Create([FromBody] CreateUserViewModel createUserViewModel)
         {
             var hashed = BCrypt.Net.BCrypt.HashPassword(createUserViewModel.Password);
@@ -31,7 +31,7 @@ namespace WebCats.Controllers
             return Ok();
         }
 
-        [HttpPost("api/login")]
+        [HttpPost("api/user/login")]
         public async Task<ActionResult> Login([FromForm] LoginViewModel loginViewModel)
         {
             var user = await _userRepository.GetUser(loginViewModel.UserName);
@@ -40,7 +40,7 @@ namespace WebCats.Controllers
             {
                 return BadRequest();
             }
-            if (BCrypt.Net.BCrypt.Verify(loginViewModel.Password,user.Password))
+            if (!BCrypt.Net.BCrypt.Verify(loginViewModel.Password,user.Password))
             {
                 return BadRequest();
             }
