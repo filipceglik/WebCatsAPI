@@ -29,7 +29,7 @@ namespace WebCats.Controllers
             {
                 return File(System.IO.File.ReadAllBytes(_environment.WebRootPath + "uploads/" + img.Filename), "image/jpeg");
             }
-            catch (NullReferenceException nullReferenceException)
+            catch (NullReferenceException)
             {
                 return NotFound();
             }

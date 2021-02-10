@@ -87,7 +87,7 @@ namespace WebCats.Controllers
 
                 }
                 //TODO: Implement authentication schema
-                catch (KeyNotFoundException keyNotFoundException)
+                catch (KeyNotFoundException)
                 {
                     return BadRequest();
                 }
