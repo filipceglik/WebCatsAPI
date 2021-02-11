@@ -1,6 +1,7 @@
 using System;
 using System.IO;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using WebCats.Infrastructure;
@@ -21,6 +22,7 @@ namespace WebCats.Controllers
             _imageRepository = imageRepository;
         }
         
+        [Authorize(Policy = "RequireAdministratorRole")]
         [HttpGet("{responseCode:int}")]
         public async Task<ActionResult<Image>> GetResponse(int responseCode)
         {

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -19,7 +20,7 @@ namespace WebCats.Controllers
         private readonly ImageRepository _imageRepository;
         private static IWebHostEnvironment _environment;
         private bool validFile;
-        
+
 
         private static readonly Dictionary<string, List<byte[]>> _fileSignature = 
             new Dictionary<string, List<byte[]>>
@@ -38,6 +39,8 @@ namespace WebCats.Controllers
             _imageRepository = imageRepository;
         }
         
+        //[Authorize(Roles = "Admin")]
+        [Authorize(Roles = Role.Admin)]
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status302Found)]
@@ -46,16 +49,17 @@ namespace WebCats.Controllers
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         public async Task<ActionResult> Create([FromForm] CreateImageViewModel imageViewModel)
         {
+            
             if (imageViewModel.Files.Length > 0 && imageViewModel.Files.FileName.Length > 0)
             {
-                
+                    
                 try
                 {
                     if (!Directory.Exists(_environment.WebRootPath + "uploads/"))
                     {
                         Directory.CreateDirectory(_environment.WebRootPath + "uploads/");
                     }
-                    
+                        
                     using (var reader = new BinaryReader(imageViewModel.Files.OpenReadStream()))
                     {
                         var signatures = _fileSignature[Path.GetExtension(imageViewModel.Files.FileName).ToLowerInvariant()];
@@ -64,7 +68,7 @@ namespace WebCats.Controllers
                         validFile = signatures.Any(signature => 
                             headerBytes.Take(signature.Length).SequenceEqual(signature));
                     }
-                    
+                        
                     if (validFile)
                     {
                         if (!System.IO.File.Exists(_environment.WebRootPath + "uploads/" + imageViewModel.Files.FileName))
@@ -82,7 +86,7 @@ namespace WebCats.Controllers
                         return Redirect("https://localhost:5001/api/response/302");
 
                     }
-                    
+                        
                     return BadRequest();
 
                 }
@@ -92,8 +96,9 @@ namespace WebCats.Controllers
                     return BadRequest();
                 }
             }
+            
 
-            return BadRequest();
+            return Ok();
         } 
     }
 }

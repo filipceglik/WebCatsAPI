@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace WebCats.Model
 {
@@ -9,12 +10,16 @@ namespace WebCats.Model
         public string Password { get; set; }
         public DateTime CreatedOn { get; set; }
 
-        public User(Guid id, string userName, string password, DateTime createdOn)
+        public string Role { get; set; }
+        //public string Token { get; set; }
+
+        public User(Guid id, string userName, string password, DateTime createdOn, string role)
         {
             Id = id;
             UserName = userName;
             Password = password;
             CreatedOn = createdOn;
+            Role = role;
         }
     }
 }
