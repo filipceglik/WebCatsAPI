@@ -28,7 +28,6 @@ namespace WebCats
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            //IdentityModelEventSource.ShowPII = true;
             services
                 .AddControllers()
                 .AddFluentValidation(x => x.RegisterValidatorsFromAssemblyContaining<Startup>());
