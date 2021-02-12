@@ -1,3 +1,4 @@
+using System.Threading;
 using System.Threading.Tasks;
 using MongoDB.Driver;
 using MongoDB.Driver.Linq;
@@ -24,6 +25,29 @@ namespace WebCats.Infrastructure
             await _databaseContext
                 .GetCollection<User>()
                 .InsertOneAsync(user);
+        }
+
+        public async Task<bool> Update(User user)
+        {
+            var entity = await GetUser(user.UserName);
+
+            if (entity == null)
+                return false;
+
+            entity.Password = user.Password;
+
+            await _databaseContext
+                .GetCollection<User>()
+                .ReplaceOneAsync(x => x.UserName == user.UserName, entity);
+
+            return true;
+        }
+        
+        public async Task Delete(User user)
+        {
+            await _databaseContext
+                .GetCollection<User>()
+                .DeleteOneAsync(x => x.UserName == user.UserName);
         }
     }
 }

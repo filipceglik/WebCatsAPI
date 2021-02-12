@@ -13,6 +13,7 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using WebCats.Helpers;
 using WebCats.Infrastructure;
+using WebCats.Model;
 
 namespace WebCats
 {

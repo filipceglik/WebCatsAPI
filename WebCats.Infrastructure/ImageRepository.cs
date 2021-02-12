@@ -30,7 +30,7 @@ namespace WebCats.Infrastructure
 
         public async Task DeleteImage(int responseCode) => await _databaseContext
             .GetCollection<Image>()
-            .DeleteOneAsync(x => x.Filename == (responseCode + ".jpeg"));
+            .DeleteManyAsync(x => x.Filename == (responseCode + ".jpeg"));
 
         public async Task<bool> UpdateImage(int responseCode, Image image)
         {

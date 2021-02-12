@@ -20,6 +20,7 @@ namespace WebCats.Controllers
     {
         private readonly UserRepository _userRepository;
         private readonly AppSettings _appSettings;
+        
 
         public UserController(UserRepository userRepository, IOptions<AppSettings> appSettings)
         {
@@ -27,13 +28,41 @@ namespace WebCats.Controllers
             _appSettings = appSettings.Value;
         }
 
-        [AllowAnonymous]
+        [Authorize(Roles = Role.Admin)]
         [HttpPost("api/user/new")]
-        public async Task<ActionResult> Create([FromBody] CreateUserViewModel createUserViewModel)
+        public async Task<ActionResult> Create([FromForm] CreateUserViewModel createUserViewModel)
         {
             var hashed = BCrypt.Net.BCrypt.HashPassword(createUserViewModel.Password);
             var user = new User(Guid.NewGuid(),createUserViewModel.UserName,hashed,DateTime.Now,createUserViewModel.Role);
             await _userRepository.Create(user);
+            return Ok();
+        }
+        
+        [Authorize]
+        [HttpPost("api/user/changepassword")]
+        public async Task<ActionResult> ChangePassword([FromForm] UpdateUserViewModel updateUserViewModel)
+        {
+            ClaimsPrincipal currentUser = this.User;
+            var hashed = BCrypt.Net.BCrypt.HashPassword(updateUserViewModel.Password);
+            var user = await _userRepository.GetUser(updateUserViewModel.UserName);
+            if (BCrypt.Net.BCrypt.Verify(updateUserViewModel.OldPassword,user.Password))
+            {
+                user.Password = hashed;
+                await _userRepository.Update(user);
+                return Ok();
+            }
+
+            return BadRequest();
+
+
+        }
+        
+        [Authorize(Roles = Role.Admin)]
+        [HttpPost("api/user/delete")]
+        public async Task<ActionResult> Delete([FromForm] DeleteUserViewModel deleteUserViewModel)
+        {
+            var user = await _userRepository.GetUser(deleteUserViewModel.UserName);
+            await _userRepository.Delete(user);
             return Ok();
         }
         
@@ -76,7 +105,6 @@ namespace WebCats.Controllers
             var tokenHandler = new JwtSecurityTokenHandler();
 
             var token = tokenHandler.CreateJwtSecurityToken(tokenDescriptor);
-//            user.Token = tokenHandler.WriteToken(token);
 
             return Ok
             (

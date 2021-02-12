@@ -1,5 +1,4 @@
 using System;
-using System.IO;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
@@ -10,13 +9,13 @@ using WebCats.Model;
 namespace WebCats.Controllers
 {
     [ApiController]
-    [Route("api/response")]
-    public class ImageFetchController : ControllerBase
+    [Route("api/response/delete")]
+    public class ImageDeleteController : ControllerBase
     {
         private readonly ImageRepository _imageRepository;
         private static IWebHostEnvironment _environment;
 
-        public ImageFetchController(IWebHostEnvironment environment, ImageRepository imageRepository)
+        public ImageDeleteController(IWebHostEnvironment environment, ImageRepository imageRepository)
         {
             _environment = environment;
             _imageRepository = imageRepository;
@@ -24,17 +23,18 @@ namespace WebCats.Controllers
         
         [Authorize(Roles = Role.Admin)]
         [HttpGet("{responseCode:int}")]
-        public async Task<ActionResult<Image>> GetResponse(int responseCode)
+        public async Task<ActionResult> GetResponse(int responseCode)
         {
-            var img = await _imageRepository.GetImage(responseCode);
             try
             {
-                return File(await System.IO.File.ReadAllBytesAsync(_environment.WebRootPath + "uploads/" + img.Filename), "image/jpeg");
+                System.IO.File.Delete(_environment.WebRootPath + "uploads/" + responseCode + ".jpeg");
             }
             catch (NullReferenceException)
             {
                 return NotFound();
             }
+
+            return Ok();
         }
     }
 }

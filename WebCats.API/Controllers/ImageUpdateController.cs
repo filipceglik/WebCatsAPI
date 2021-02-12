@@ -70,7 +70,8 @@ namespace WebCats.Controllers
                     }
 
                     if (!validFile) return BadRequest();
-                    await using (FileStream filestream = System.IO.File.Create(_environment.WebRootPath + "uploads/" + updateImageViewModel.Files.FileName))
+                    System.IO.File.Delete(_environment.WebRootPath + "uploads/" + updateImageViewModel.ResponseCode + ".jpeg");
+                    await using (FileStream filestream = System.IO.File.Create(_environment.WebRootPath + "uploads/" + updateImageViewModel.ResponseCode + ".jpeg"))
                     {
                         await updateImageViewModel.Files.CopyToAsync(filestream);
                         filestream.Flush();
