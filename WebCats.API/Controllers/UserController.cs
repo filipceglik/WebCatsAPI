@@ -32,10 +32,16 @@ namespace WebCats.Controllers
         [HttpPost("api/user/new")]
         public async Task<ActionResult> Create([FromForm] CreateUserViewModel createUserViewModel)
         {
+            bool validUsername;
             var hashed = BCrypt.Net.BCrypt.HashPassword(createUserViewModel.Password);
             var user = new User(Guid.NewGuid(),createUserViewModel.UserName,hashed,DateTime.Now,createUserViewModel.Role);
-            await _userRepository.Create(user);
-            return Ok();
+            if (await _userRepository.Create(user))
+            {
+                return Ok();
+            }
+
+            return BadRequest();
+
         }
         
         [Authorize]

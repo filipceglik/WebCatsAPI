@@ -22,7 +22,7 @@ namespace WebCats.Controllers
             _imageRepository = imageRepository;
         }
         
-        [Authorize(Roles = Role.Admin)]
+        [Authorize]
         [HttpGet("{responseCode:int}")]
         public async Task<ActionResult<Image>> GetResponse(int responseCode)
         {

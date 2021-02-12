@@ -20,11 +20,18 @@ namespace WebCats.Infrastructure
             .AsQueryable()
             .FirstOrDefaultAsync(x => x.UserName == username);
 
-        public async Task Create(User user)
+        public async Task<bool> Create(User user)
         {
+            var existingUser = await GetUser(user.UserName);
+            if (existingUser != null && existingUser.UserName == user.UserName)
+            {
+                return false;
+            }
+
             await _databaseContext
                 .GetCollection<User>()
                 .InsertOneAsync(user);
+            return true;
         }
 
         public async Task<bool> Update(User user)
